@@ -91,6 +91,12 @@ ${prompt_processed}
   if (model) { args.push(CLI.FLAGS.MODEL, model); }
   if (sandbox) { args.push(CLI.FLAGS.SANDBOX); }
   
+  // Quote and escape prompt when executed through a shell (Windows)
+  const finalPrompt = process.platform === 'win32'
+    ? `"${prompt_processed.replace(/"/g, '""')}"`
+    : prompt_processed;
+    
+  args.push(CLI.FLAGS.PROMPT, finalPrompt);
   // Wrap prompt in quotes to handle spaces and special characters
   args.push(CLI.FLAGS.PROMPT, `"${prompt_processed.replace(/"/g, '\\"')}"`);
   
@@ -107,6 +113,12 @@ ${prompt_processed}
         fallbackArgs.push(CLI.FLAGS.SANDBOX);
       }
       
+      // Same quoting logic for fallback
+      const fallbackPrompt = process.platform === 'win32'
+        ? `"${prompt_processed.replace(/"/g, '""')}"`
+        : prompt_processed;
+        
+      fallbackArgs.push(CLI.FLAGS.PROMPT, fallbackPrompt);
       // Wrap prompt in quotes to handle spaces and special characters
       fallbackArgs.push(CLI.FLAGS.PROMPT, `"${prompt_processed.replace(/"/g, '\\"')}"`);
       try {
