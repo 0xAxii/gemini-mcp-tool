@@ -2,24 +2,34 @@
 import { LOG_PREFIX } from "../constants.js";
 
 export class Logger {
+  // Disable debug logs in production/MCP mode to avoid interference with stdio protocol
+  private static isDebugEnabled = process.env.DEBUG === 'true' || process.env.NODE_ENV === 'development';
+
   private static formatMessage(message: string): string {
     return `${LOG_PREFIX} ${message}` + "\n";
   }
 
   static log(message: string, ...args: any[]): void {
-    console.warn(this.formatMessage(message), ...args);
+    if (this.isDebugEnabled) {
+      console.warn(this.formatMessage(message), ...args);
+    }
   }
 
   static warn(message: string, ...args: any[]): void {
-    console.warn(this.formatMessage(message), ...args);
+    if (this.isDebugEnabled) {
+      console.warn(this.formatMessage(message), ...args);
+    }
   }
 
   static error(message: string, ...args: any[]): void {
+    // Always log errors
     console.error(this.formatMessage(message), ...args);
   }
 
   static debug(message: string, ...args: any[]): void {
-    console.warn(this.formatMessage(message), ...args);
+    if (this.isDebugEnabled) {
+      console.warn(this.formatMessage(message), ...args);
+    }
   }
 
   static toolInvocation(toolName: string, args: any): void {

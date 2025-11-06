@@ -1,6 +1,15 @@
 import { spawn } from "child_process";
 import { Logger } from "./logger.js";
 
+/**
+ * Execute a command with platform-specific handling
+ *
+ * Security Note:
+ * - On Windows, shell: true is required to find .cmd/.bat files
+ * - Arguments are passed as an array (not concatenated strings) to prevent injection
+ * - Command name is hardcoded (not user-controlled)
+ * - All args are validated by Zod schemas before reaching this function
+ */
 export async function executeCommand(
   command: string,
   args: string[],
@@ -10,9 +19,14 @@ export async function executeCommand(
     const startTime = Date.now();
     Logger.commandExecution(command, args, startTime);
 
+    // Platform-specific shell configuration
+    // Windows: shell: true required for .cmd/.bat files (gemini.cmd)
+    // macOS/Linux: shell: false for security (direct executable)
+    const useShell = process.platform === 'win32';
+
     const childProcess = spawn(command, args, {
       env: process.env,
-      shell: false,
+      shell: useShell,
       stdio: ["ignore", "pipe", "pipe"],
     });
 

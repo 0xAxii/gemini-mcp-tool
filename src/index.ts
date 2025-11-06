@@ -30,7 +30,7 @@ import {
 const server = new Server(
   {
     name: "gemini-cli-mcp",
-    version: "1.1.4",
+    version: "1.1.5",
   },{
     capabilities: {
       tools: {},
@@ -253,6 +253,12 @@ server.setRequestHandler(GetPromptRequestSchema, async (request: GetPromptReques
 // Start the server
 async function main() {
   Logger.debug("init gemini-mcp-tool");
-  const transport = new StdioServerTransport(); await server.connect(transport);
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
   Logger.debug("gemini-mcp-tool listening on stdio");
-} main().catch((error) => {Logger.error("Fatal error:", error); process.exit(1); }); 
+}
+
+main().catch((error) => {
+  Logger.error("Fatal error:", error);
+  process.exit(1);
+}); 
