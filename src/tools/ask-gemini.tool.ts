@@ -13,6 +13,7 @@ const askGeminiArgsSchema = z.object({
   changeMode: z.boolean().default(false).describe("Enable structured change mode - formats prompts to prevent tool errors and returns structured edit suggestions that Claude can apply directly"),
   chunkIndex: z.union([z.number(), z.string()]).optional().describe("Which chunk to return (1-based)"),
   chunkCacheKey: z.string().optional().describe("Optional cache key for continuation"),
+  resume: z.string().optional().describe("Resume a previous session. Use 'latest' for most recent, or provide session index/UUID. Maintains conversation context across calls."),
 });
 
 export const askGeminiTool: UnifiedTool = {
@@ -24,8 +25,8 @@ export const askGeminiTool: UnifiedTool = {
   },
   category: 'gemini',
   execute: async (args, onProgress) => {
-    const { prompt, model, sandbox, changeMode, chunkIndex, chunkCacheKey } = args; if (!prompt?.trim()) { throw new Error(ERROR_MESSAGES.NO_PROMPT_PROVIDED); }
-  
+    const { prompt, model, sandbox, changeMode, chunkIndex, chunkCacheKey, resume } = args; if (!prompt?.trim()) { throw new Error(ERROR_MESSAGES.NO_PROMPT_PROVIDED); }
+
     if (changeMode && chunkIndex && chunkCacheKey) {
       return processChangeModeOutput(
         '', // empty for cache...
@@ -34,13 +35,14 @@ export const askGeminiTool: UnifiedTool = {
         prompt as string
       );
     }
-    
+
     const result = await executeGeminiCLI(
       prompt as string,
       model as string | undefined,
       !!sandbox,
       !!changeMode,
-      onProgress
+      onProgress,
+      resume as string | undefined
     );
     
     if (changeMode) {

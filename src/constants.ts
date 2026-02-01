@@ -5,16 +5,16 @@ export const LOG_PREFIX = "[GMCPT]";
 
 // Error messages
 export const ERROR_MESSAGES = {
-  QUOTA_EXCEEDED: "Quota exceeded for quota metric 'Gemini 2.5 Pro Requests'",
-  QUOTA_EXCEEDED_SHORT: "⚠️ Gemini 2.5 Pro daily quota exceeded. Please retry with model: 'gemini-2.5-flash'",
+  QUOTA_EXCEEDED: "Quota exceeded for quota metric 'Gemini 3 Pro Requests'",
+  QUOTA_EXCEEDED_SHORT: "⚠️ Gemini 3 Pro daily quota exceeded. Please retry with model: 'gemini-3-flash'",
   TOOL_NOT_FOUND: "not found in registry",
   NO_PROMPT_PROVIDED: "Please provide a prompt for analysis. Use @ syntax to include files (e.g., '@largefile.js explain what this does') or ask general questions",
 } as const;
 
 // Status messages
 export const STATUS_MESSAGES = {
-  QUOTA_SWITCHING: "🚫 Gemini 2.5 Pro quota exceeded, switching to Flash model...",
-  FLASH_RETRY: "⚡ Retrying with Gemini 2.5 Flash...",
+  QUOTA_SWITCHING: "🚫 Gemini 3 Pro quota exceeded, switching to Flash model...",
+  FLASH_RETRY: "⚡ Retrying with Gemini 3 Flash...",
   FLASH_SUCCESS: "✅ Flash model completed successfully",
   SANDBOX_EXECUTING: "🔒 Executing Gemini CLI command in sandbox mode...",
   GEMINI_RESPONSE: "Gemini response:",
@@ -26,8 +26,8 @@ export const STATUS_MESSAGES = {
 
 // Models
 export const MODELS = {
-  PRO: "gemini-2.5-pro",
-  FLASH: "gemini-2.5-flash",
+  PRO: "gemini-3-pro",
+  FLASH: "gemini-3-flash",
 } as const;
 
 // MCP Protocol Constants
@@ -70,6 +70,7 @@ export const CLI = {
     SANDBOX: "-s",
     PROMPT: "-p",
     HELP: "-help",
+    RESUME: "--resume",
   },
   // Default values
   DEFAULTS: {
@@ -89,6 +90,7 @@ export interface ToolArguments {
   chunkIndex?: number | string; // Which chunk to return (1-based)
   chunkCacheKey?: string; // Optional cache key for continuation
   message?: string; // For Ping tool -- Un-used.
+  resume?: string; // Resume a previous session ("latest" or session ID)
   
   // --> new tool
   methodology?: string; // Brainstorming framework to use

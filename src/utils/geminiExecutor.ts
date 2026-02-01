@@ -17,7 +17,8 @@ export async function executeGeminiCLI(
   model?: string,
   sandbox?: boolean,
   changeMode?: boolean,
-  onProgress?: (newOutput: string) => void
+  onProgress?: (newOutput: string) => void,
+  resume?: string
 ): Promise<string> {
   let prompt_processed = prompt;
   
@@ -88,6 +89,7 @@ ${prompt_processed}
   }
   
   const args = [];
+  if (resume) { args.push(CLI.FLAGS.RESUME, resume); }
   if (model) { args.push(CLI.FLAGS.MODEL, model); }
   if (sandbox) { args.push(CLI.FLAGS.SANDBOX); }
   
@@ -106,6 +108,7 @@ ${prompt_processed}
       Logger.warn(`${ERROR_MESSAGES.QUOTA_EXCEEDED}. Falling back to ${MODELS.FLASH}.`);
       await sendStatusMessage(STATUS_MESSAGES.FLASH_RETRY);
       const fallbackArgs = [];
+      if (resume) { fallbackArgs.push(CLI.FLAGS.RESUME, resume); }
       fallbackArgs.push(CLI.FLAGS.MODEL, MODELS.FLASH);
       if (sandbox) {
         fallbackArgs.push(CLI.FLAGS.SANDBOX);

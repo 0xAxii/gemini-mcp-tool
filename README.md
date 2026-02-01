@@ -1,17 +1,36 @@
+# Gemini MCP Tool (Fork)
 
-# Gemini MCP Tool
+> Forked from [jamubc/gemini-mcp-tool](https://github.com/jamubc/gemini-mcp-tool)
+
+## Changes from upstream
+
+| Feature | Upstream | This Fork |
+|---------|----------|-----------|
+| Default model | `gemini-2.5-pro` | `gemini-3-pro` |
+| Session continuity | N/A | `resume` parameter |
+
+### Added: `resume` parameter
+
+Maintains conversation context across multiple calls:
+
+```typescript
+// First call
+ask-gemini(prompt="Analyze this code @src/main.ts")
+
+// Continue the conversation
+ask-gemini(prompt="What about error handling?", resume="latest")
+
+// Resume specific session
+ask-gemini(prompt="Continue", resume="5")
+```
+
+---
 
 <div align="center">
 
-[![GitHub Release](https://img.shields.io/github/v/release/jamubc/gemini-mcp-tool?logo=github&label=GitHub)](https://github.com/jamubc/gemini-mcp-tool/releases)
-[![npm version](https://img.shields.io/npm/v/gemini-mcp-tool)](https://www.npmjs.com/package/gemini-mcp-tool)
-[![npm downloads](https://img.shields.io/npm/dt/gemini-mcp-tool)](https://www.npmjs.com/package/gemini-mcp-tool)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Open Source](https://img.shields.io/badge/Open%20Source-❤️-red.svg)](https://github.com/jamubc/gemini-mcp-tool)
 
 </div>
-
-> 📚 **[View Full Documentation](https://jamubc.github.io/gemini-mcp-tool/)** - Search me!, Examples, FAQ, Troubleshooting, Best Practices
 
 This is a simple Model Context Protocol (MCP) server that allows AI assistants to interact with the [Gemini CLI](https://github.com/google-gemini/gemini-cli). It enables the AI to leverage the power of Gemini's massive token window for large analysis, especially with large files and codebases using the `@` syntax for direction.
 
@@ -139,8 +158,9 @@ These tools are designed to be used by the AI assistant.
 
 - **`ask-gemini`**: Asks Google Gemini for its perspective. Can be used for general questions or complex analysis of files.
   - **`prompt`** (required): The analysis request. Use the `@` syntax to include file or directory references (e.g., `@src/main.js explain this code`) or ask general questions (e.g., `Please use a web search to find the latest news stories`).
-  - **`model`** (optional): The Gemini model to use. Defaults to `gemini-2.5-pro`.
+  - **`model`** (optional): The Gemini model to use. Defaults to `gemini-3-pro`.
   - **`sandbox`** (optional): Set to `true` to run in sandbox mode for safe code execution.
+  - **`resume`** (optional): Resume a previous session. Use `"latest"` for most recent, or provide session index/UUID.
 - **`sandbox-test`**: Safely executes code or commands in Gemini's sandbox environment. Always runs in sandbox mode.
   - **`prompt`** (required): Code testing request (e.g., `Create and run a Python script that...` or `@script.py Run this safely`).
   - **`model`** (optional): The Gemini model to use.
